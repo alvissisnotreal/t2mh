@@ -66,9 +66,10 @@ public class BMOrderInfoListView implements Serializable {
 
             }
         }
+        //thisisacomment
         lazyModel = new LazyOrderInfoDataModel(listOrderInfo);
     }
-
+    //aaaa
     public LazyDataModel<OrderInfo> getLazyModel() {
         return lazyModel;
     }
