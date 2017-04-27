@@ -1,0 +1,58 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutEmployee.isAllowed('Role03')}" rendererType="preRenderView" />
+                <f:viewAction action="#{aboutCate.loadDetails()}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <p:growl id="messagesUpdate" showDetail="true" autoUpdate="true" />
+                <h:form>
+                    <p:outputPanel id="info" rendered="#{not empty aboutCate.cate}">
+                        <p:inputText value="#{aboutCate.cate.cateID}" type="hidden">
+                        </p:inputText>
+
+                        <p:panel header="Create Cate" >  
+                            <p:panelGrid layout="grid" columns="2" columnClasses="panelGridcolumn1,panelGridcolumn2">                 
+
+                                <p:outputLabel for="cateID" value="ID: " style="font-weight:bold" title="Category ID"/>                    
+                                <p:outputLabel id="cateID" value="#{aboutCate.cate.cateID}" style="font-weight:bold" title="Category ID"/>  
+
+                                <p:outputLabel for="cateName" value="Category Name: " style="font-weight:bold" title="Category Name"/>                    
+                                <p:inplace editor="true">
+                                    <p:inputText id="cateName"  value="#{aboutCate.cate.cateName}" label="Category Name" required="true">
+                                        <!--<p:keyFilter regEx="/[0-9a-zA-Z ,&]/i"/>-->
+                                        <f:validateLength minimum="1" maximum="100"/>
+                                    </p:inputText>
+                                    <p:ajax event="save" update="messagesUpdate" listener="#{aboutCate.checkNameForUpdate()}"/>
+                                </p:inplace>
+
+                                <p:outputLabel for="Status" value="Status: " style="font-weight:bold" title="Enable"/>
+                                <p:selectOneRadio id="Status" value="#{aboutCate.cate.cateStatus}" required="true" requiredMessage="Status is required!">
+                                    <f:selectItem itemLabel="Enable" itemValue="1"   />
+                                    <f:selectItem itemLabel="Disable" itemValue="0" />
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="Description" value="Description: " style="font-weight:bold" title="Description"/>                    
+                                <p:inputTextarea id="Description" binding="#{theDescription}"  value="#{aboutCate.hmDes['Description']}" style="resize: vertical;" label="Description">
+                                </p:inputTextarea>
+
+                            </p:panelGrid>
+                            <p:commandButton ajax="true"  action="#{aboutCate.updateCate()}" value="Update" class="ui-state-active" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>                      
+                        </p:panel>
+                    </p:outputPanel>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>
+
+

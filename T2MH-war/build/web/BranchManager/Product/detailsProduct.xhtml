@@ -1,0 +1,229 @@
+<ui:composition template="../../Template/BranchManager/TemplateBM.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{bmProduct.reloadPage()}"/>
+                <f:viewAction action="#{bmProduct.loadDetails()}" rendererType="preRenderView" />
+            </f:metadata>
+            <style>
+            </style>
+            <h:body>
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <p:growl id="messagesUpdate" autoUpdate="true" globalOnly="true" escape="false" showDetail="true" />
+                <p:growl id="tagMessagesUpdate" escape="false" showDetail="true" />
+                <h:form id="form" enctype="multipart/form-data">
+                    <p:panel header="Details/Update Product"  >  
+                        <h:panelGrid id="panelCreate" columns="3" cellpadding="5" columnClasses="panelGridcolumn1,panelGridcolumn2">  
+
+                            <p:outputLabel for="cateName" value="Category: " style="font-weight:bold"/>
+                            <h:outputText id="cateName" value="#{bmProduct.product.groupID.cateID.cateName}"/>
+                            <p/>
+
+                            <p:outputLabel for="groupName" value="Group: " style="font-weight:bold"/>
+                            <h:outputText id="groupName" value="#{bmProduct.product.groupID.groupName}"/>
+                            <h:outputText/>
+
+                            <p:outputLabel for="ProductID" value="ProductID: " style="font-weight:bold" title="Product ID"/>
+                            <h:outputText id="ProductID" value="#{bmProduct.product.productID}"/>
+                            <h:outputText/>
+
+                            <p:outputLabel  value="Avatar:" style="font-weight:bold" title="Avatar Images"/>  
+                            <p:graphicImage value="#{bmProduct.fileAvatarString}" width="200" height="200"/>
+                            <p/>
+
+                            <p:outputLabel for="Avatar" value="Upload Avatar:" style="font-weight:bold" title="Avatar Image"/>                    
+                            <p:fileUpload id="Avatar" required="true" requiredMessage="Need an Avatar" fileUploadListener="#{bmProduct.handleFileAvatarUpload}" mode="advanced" dragDropSupport="true"
+                                          multiple="false" update="messagesUpdate" sizeLimit="10485760"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
+                            <p:commandButton icon="fa fa-eraser" style="background-color: inherit;color: black;" process="@this" update="@form">
+                                <p:ajax listener="#{bmProduct.resetUploadAvatar()}" event="click"/>
+                            </p:commandButton>
+
+                            <p:outputLabel  value="Images:" style="font-weight:bold" title="List Image" rendered="#{bmProduct.fileListImagesString.size()>0}"/>  
+                            <p:galleria  value="#{bmProduct.fileListImagesString}" var="image" panelWidth="300" panelHeight="200" frameHeight="45" frameWidth="45"  style="text-align: center;" autoPlay="false" rendered="#{bmProduct.fileListImagesString.size()>0}">
+                                <p:graphicImage value="#{image}" width="150" height="150" style="position: absolute;margin-top: 10px;margin-left: -95px;">
+                                    <p:commandButton class="deleteImageGallary" icon="fa fa-times"  process="@this" update="@form" onclick="addDeleteImage('#{image}')" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" >
+                                    </p:commandButton>
+                                </p:graphicImage>
+                            </p:galleria>
+                            <p:outputLabel rendered="#{bmProduct.fileListImagesString.size()>0}" />
+
+                            <p:outputLabel for="ImagesList" value="Upload Images Content: " style="font-weight:bold" title="List Images"/>                    
+                            <p:fileUpload id="ImagesList" required="true" requiredMessage="Need at lease 1 of Images List" fileUploadListener="#{bmProduct.handleFileImagesUpload}" mode="advanced" dragDropSupport="true"
+                                          multiple="true" fileLimit="#{bmProduct.fileLimit}" update="messagesUpdate" sizeLimit="20971520"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
+                            <p:commandButton icon="fa fa-eraser" style="background-color: inherit;color: black;" process="@this" update="@form">
+                                <p:ajax listener="#{bmProduct.resetUploadListImages()}" event="click"/>
+                            </p:commandButton>
+
+                            <p:outputLabel value="Specifics Of Item:" style="font-weight:bold" title="Specifics List" rendered="#{bmProduct.hmSpec.size()>0}"/>
+                            <p:outputPanel id="outputPanelSpec" rendered="#{bmProduct.hmSpec.size()>0}">
+                                <p:panelGrid  id="panelSpecList" columns="1" style="width: 900px;text-align: left;margin-top: 20px;" class="noBorderPanelGridSpec">
+                                    <p:dataGrid value="#{bmProduct.convertHashMapToList(bmProduct.hmSpec,'Key')}" var="specID" columns="1">
+                                        <p:panelGrid id="aPanelSpec" columns="3" class="noBorderPanelGridSpec" columnClasses="columnSpec1,columnSpec2,columnSpec3">
+
+                                            <p:outputLabel value="#{bmProduct.getNameBySpecID(specID)}" style="font-weight: bold;"/>
+
+                                            <p:inputText value="#{bmProduct.hmSpec[specID]}">
+                                                <p:ajax />
+                                            </p:inputText>
+
+                                            <p:commandButton icon="fa fa-minus-circle" style="background-color: threedhighlight;color: red;" process="@this" update="@form">
+                                                <p:ajax listener="#{bmProduct.clickToRemoveSpec(specID)}" />
+                                            </p:commandButton>
+
+                                        </p:panelGrid>
+                                    </p:dataGrid>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                            <p:outputLabel rendered="#{bmProduct.hmSpec.size()>0}"/>
+
+                            <p:outputLabel value="List Specifics:" style="font-weight:bold" title="Specifics List" rendered="#{bmProduct.allSpec.size() > 0}"/>
+                            <p:selectOneListbox id="specList" value="#{bmProduct.specID}" scrollHeight="120" rendered="#{bmProduct.allSpec.size() > 0}"  >
+                                <f:selectItems var="itemSpec" value="#{bmProduct.allSpec}" itemLabel="#{itemSpec.specName}" itemValue="#{itemSpec.specID}"/>    
+                                <p:ajax listener="#{bmProduct.specChange()}" event="change"  update="@form"/>
+                                <p:ajax listener="#{bmProduct.specChange()}" event="click"  update="@form" disabled="#{bmProduct.allSpec.size() != 1}"/>
+                            </p:selectOneListbox>
+                            <p:outputLabel rendered="#{bmProduct.allSpec.size() > 0}"/>
+
+                            <p:outputLabel for="dateCreate" value="Date Create:" style="font-weight:bold" />                    
+                            <h:outputText id="dateCreate" value="#{bmProduct.product.dateCreate}" />      
+                            <h:outputText/>
+
+                            <p:outputLabel for="createBy" value="Create By:" style="font-weight:bold" rendered="#{bmProduct.hmDes['CreateBy']!=null}"/>                    
+                            <h:outputText id="createBy" value="#{bmProduct.hmDes['CreateBy']}"  rendered="#{bmProduct.hmDes['CreateBy']!=null}"/>      
+                            <h:outputText rendered="#{bmProduct.hmDes['CreateBy']!=null}"/>
+
+                            <p:outputLabel for="lastEdit" value="Last Edit By BM:" style="font-weight:bold" rendered="#{bmProduct.hmDes['LastEdit']!=null}"/>                    
+                            <h:outputText id="lastEdit" value="#{bmProduct.hmDes['LastEdit']}"  rendered="#{bmProduct.hmDes['LastEdit']!=null}"/>      
+                            <h:outputText rendered="#{bmProduct.hmDes['LastEdit']!=null}"/>
+
+                            <p:outputLabel for="editBy" value="Edit By BM:" style="font-weight:bold" rendered="#{bmProduct.hmDes['EditBy']!=null}"/>                    
+                            <h:outputText id="editBy" value="#{bmProduct.hmDes['EditBy']}"  rendered="#{bmProduct.hmDes['EditBy']!=null}"/>      
+                            <h:outputText rendered="#{bmProduct.hmDes['EditBy']!=null}"/>
+
+                            <p:outputLabel for="adminLastEdit" value="Last Edit By Admin:" style="font-weight:bold;color: #31b0d5;" rendered="#{bmProduct.hmDes['AdminLastEdit']!=null}"/>                    
+                            <h:outputText id="adminLastEdit" value="#{bmProduct.hmDes['AdminLastEdit']}"  rendered="#{bmProduct.hmDes['AdminLastEdit']!=null}"/>      
+                            <h:outputText rendered="#{bmProduct.hmDes['AdminLastEdit']!=null}"/>
+
+                            <p:outputLabel for="adminEditReason" value="Edit Reason:" style="font-weight:bold;color: #31b0d5;" rendered="#{bmProduct.hmDes['AdminEditReason']!=null}"/>                    
+                            <h:outputText id="adminEditReason" value="#{bmProduct.hmDes['AdminEditReason']}"  rendered="#{bmProduct.hmDes['AdminEditReason']!=null}" />      
+                            <h:outputText rendered="#{bmProduct.hmDes['AdminEditReason']!=null}"/>
+
+                            <p:outputLabel for="productName" value="Product Name:" style="font-weight:bold" title="Name of Product"/>                    
+                            <p:inputText id="productName"  value="#{bmProduct.product.productName}"  required="true"  requiredMessage="Product Name is required!" validatorMessage="Product Name accept to 1000 characters">
+                                <f:validateLength maximum="1000"/>
+                                <p:ajax />
+                            </p:inputText>
+                            <h:outputText/>
+
+                            <p:outputLabel for="Status" value="Status: " style="font-weight:bold;" title="Enable"/>
+                            <p:selectOneRadio id="Status" value="#{bmProduct.product.productStatus}" style="margin-bottom: -20px;" required="true" requiredMessage="Status is required!" rendered="#{bmProduct.product.productStatus != -1}">
+                                <f:selectItem itemLabel="Enable" itemValue="1"  itemDisabled="#{bmProduct.product.productStatus==-2}" />
+                                <f:selectItem itemLabel="Disable" itemValue="0" itemDisabled="#{bmProduct.product.productStatus==-2}" />
+                            </p:selectOneRadio>
+                            <h:outputText value="Waiting For Approval" style="color: #feb66d;font-weight: bold;" rendered="#{bmProduct.product.productStatus == -1}"/>
+                            <p:outputLabel/>
+
+                            <p:outputLabel for="price" value="Price:" style="font-weight:bold" title="Price of Product"/>                    
+                            <p:inputNumber id="price" minValue="0"  maxValue="10000000000" value="#{bmProduct.hmDes['Price']}"  required="true"  requiredMessage="Price is required!" validatorMessage="Price accept form 0 to 10 billion" >
+                                <f:validateDoubleRange maximum="10000000000" minimum="0" />
+                                <p:keyFilter regEx="/[0-9]/i"/>
+                                <p:ajax />
+                            </p:inputNumber>
+                            <h:outputText/>
+
+                            <p:outputLabel for="inventory" value="Inventory:" style="font-weight:bold" title="Inventory"/>                    
+                            <p:inputNumber id="inventory" minValue="0"  maxValue="10000"  value="#{bmProduct.product.inventory}"  required="true"  requiredMessage="Inventory is required!" validatorMessage="Inventory accept 0 to 10000" >
+                                <f:validateDoubleRange maximum="10000" minimum="0" />
+                                <p:keyFilter regEx="/[0-9]/i"/>
+                                <p:ajax />
+                            </p:inputNumber>
+                            <h:outputText/>
+
+                            <h:outputText/>
+                            <p:panelGrid>
+                                <ui:repeat value="#{bmProduct.tagList}" var="aTag">
+                                    <span class="tagBorder" role="listitem">
+                                        <span onclick="invokeEditTag('#{aTag}');">#{aTag}</span>
+                                        <span class="btnNoBorder" role="button" onclick="invokeRemoveTag('#{aTag}');">
+                                            <!--<p:ajax event="click" listener="" />-->
+                                        </span>
+                                    </span>
+                                </ui:repeat>
+                            </p:panelGrid>
+                            <h:outputText/>
+
+                            <p:outputLabel for="tagInput" value="Tags: " style="font-weight:bold;" title="Tags Of Product"/>
+                            <p:inputText id="tagInput" value="#{bmProduct.lastInputTag}" >
+                                <p:ajax event="keypress" process="@this" />
+                                <p:ajax event="blur" process="@this" />
+                            </p:inputText>
+                            <p:inputText id="tag" type="hidden" value="#{bmProduct.tag}">
+                                <p:ajax />
+                            </p:inputText>
+
+                            <p:outputLabel for="Description" value="Description: " style="font-weight:bold" title="Description"/>                    
+                            <p:inputTextarea id="Description"  value="#{bmProduct.hmDes['Description']}" style="width: 100%;resize: vertical;"  rows="15">
+                                <p:ajax />
+                            </p:inputTextarea>
+                            <h:outputText/>
+
+                        </h:panelGrid>
+                        <p:remoteCommand name="enterANewTag"  actionListener="#{bmProduct.addNewTag()}" process="@this" update="@form,:tagMessagesUpdate"/>
+                        <p:remoteCommand name="removeTag"  actionListener="#{bmProduct.removeTag}" process="@this" update="@form"/>
+                        <p:remoteCommand name="editTag"  actionListener="#{bmProduct.editTag}" process="@this" update="@form"/>
+                        <p:remoteCommand name="clickDeleteImage"  actionListener="#{bmProduct.addImageDelete}" process="@this" update="@form"/>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                            $("[id='form:tagInput']").on('keypress', function (e) {
+                                if ($("[id='form:tagInput']").val().trim().length === 0 && e.which !== 13)
+                                {
+                                    return;
+                                }
+                                if ($("[id='form:tagInput']").val().trim().length === 0 && e.which === 13)/*avoid submit reset list image file when input tags empty and press enter*/
+                                {
+                                    return false;
+                                }
+                                if (e.which === 13)
+                                {
+                                    enterANewTag();
+                                }
+                                return e.which !== 13;
+                            });
+
+                            $("input[id!='form:tagInput']").on('keypress', function (e) {
+                                return e.which !== 13;
+                            });
+                            function invokeRemoveTag(valueTag)
+                            {
+                                removeTag([{name: 'valueTag', value: valueTag}]);//success
+                            }
+                            function invokeEditTag(valueTag)
+                            {
+                                editTag([{name: 'valueTag', value: valueTag}]);//success
+                            }
+                            function removeListSpec()
+                            {
+                                $("[id='form:specList']").remove();
+                            }
+                            function addDeleteImage(urlDelete)
+                            {
+                                clickDeleteImage([{name: 'urlDelete', value: urlDelete}]);//success
+//                                $("[id='form:specList']").remove();
+                            }
+                            //]]>
+                        </script>
+                        <p:commandButton ajax="true"  action="#{bmProduct.updateProduct()}" value="Update" class="ui-state-active" rendered="#{bmProduct.product.productStatus eq 1 or bmProduct.product.productStatus eq 0}" />                      
+                    </p:panel>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

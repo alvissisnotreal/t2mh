@@ -1,0 +1,54 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutEmployee.isAllowed('Role03')}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <p:growl id="messagesUpdate" showDetail="true" severity="info, warn, error"/>
+                <h:form id="form" >  
+                    <p:dataTable id="listEmp" var="item" value="#{categoryListView.lazyModel}"  resizableColumns="true" 
+                                 rows="10" style="background-color: lightblue"
+                                 paginator="true"  lazy="true" 
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15,20" >
+                        <f:facet name="header">
+                            <h:outputText value="List Category" style="color: #FF8282"/>
+                        </f:facet>
+                        <p:column resizable="true" headerText="ID" sortBy="#{item.cateID}" filterBy="#{item.cateID}">
+                            <h:outputText value="#{item.cateID}"  style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="Category Name" sortBy="#{item.cateName}" filterBy="#{item.cateName}">
+                            <h:outputText value="#{item.cateName}"  style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column style="text-align: center" headerText="Status" sortBy="#{item.cateStatus}" >
+                            <p:selectOneRadio value="#{item.cateStatus}" >
+                                <p:ajax event="change" listener="#{aboutCate.clickStatus(item.cateID,'click')}" update=":messagesUpdate"/>
+                                <f:selectItem itemLabel="Enable" itemValue="1"   />
+                                <f:selectItem itemLabel="Disable" itemValue="0" />
+                            </p:selectOneRadio>
+                        </p:column>
+
+                        <p:column style="text-align: center" headerText="Action" >
+                            <p:link class="btn" value="Update" outcome="detailsCate" target="_blank"  style="margin: auto;text-align: center;display: block">
+                                <f:param name="cateID" value="#{item.cateID}"/>
+                            </p:link>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

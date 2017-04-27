@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    template="../Template/Customer/TemplateOfCustomer.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:outputScript library="primefaces" name="jquery/jquery.js" ></h:outputScript>
+        <h:outputStylesheet library="css" name="infoCus.css"></h:outputStylesheet>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("html, body").animate({scrollTop: "500px"});
+            });
+        </script>
+        <div id="content">
+            <div id="content-top">
+                <p:graphicImage value="/Images/Icons/logo.png" style="width: 1360px"/>
+            </div>
+            <f:metadata>
+                <f:viewAction action="#{showTemplate.showCate()}"/>
+
+                <f:viewAction action="#{detailProduct.detailProduct()}"/>
+                <f:viewAction action="#{detailProduct.allReivew()}" />
+            </f:metadata>
+
+            <div id="content-center">
+                <div id="product-header">
+                    <div id="product-name">
+                        <h2>#{detailProduct.productName}</h2>
+                    </div>
+                    <div id="product-branch">
+                        <p:link outcome="detailbrand" value="#{detailProduct.branchName}">
+                            <f:param name="branchID" value="#{detailProduct.branchID}"></f:param>
+                        </p:link>
+                    </div>
+                </div>
+                <div id="product-body">
+                    <div id="img-left">
+                        <div id="img-table">
+                            <div id="big-img">
+                                <p:graphicImage value="#{detailProduct.avatar}" id="bigImg"></p:graphicImage>
+                            </div>
+                            <div id="thumbnail">
+                                <ui:repeat var="item" value="#{detailProduct.listImg}">
+                                    <p:graphicImage value="#{item}" ></p:graphicImage>
+                                </ui:repeat>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="product-right">
+                        <div id="product-Unit">
+                            <span>ID: <h5>#{detailProduct.idProduct}</h5></span>
+                        </div>
+                        <div id="product-Price">
+                            <span>Price:<h5><p:outputLabel value="#{detailProduct.price}"><f:convertNumber integerOnly="true"/></p:outputLabel></h5></span>
+                        </div>
+                        <div id="product-rank">
+                            <span style="color: #dddd09;font-size: 20px"> &#9733;<span class="total"><h:outputText value="#{detailProduct.rank}" style="margin-left: 63px;color: #000">
+
+                                    </h:outputText></span>
+                            </span>
+                        </div>
+                        <div id="product-Group">
+                            <span>Group: <h5>#{detailProduct.groupName}</h5></span>
+                        </div>
+                        <div id="product-Iventory">
+                            <span>Inventory:<h5>#{detailProduct.inventory}</h5></span>
+
+                        </div>
+                        <div id="product-button">
+                            <h:body>
+                                <h:form>
+                                    <p:commandLink class="link-top" value="Add To Cart" ajax="true"  style="background: #2282a1;
+                                                   color: white;
+                                                   padding: 4px;"
+                                                   actionListener="#{customerOrder.addProduct(detailProduct.idProduct)}" process="@this" rendered="#{detailProduct.inventory gt 0}" />
+                                    <p:outputLabel class="link-top" value="Out Of Stock"
+                                                   rendered="#{detailProduct.inventory le 0}" 
+                                                   />
+                                </h:form>
+                            </h:body>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab">
+                    <button class="tablinks" onclick="openCity(event, 'des')" id="defaultOpen">Description</button>
+                    <button class="tablinks" onclick="openCity(event, 'review')">Review</button>
+                </div>
+
+                <div id="des" class="tabcontent">
+                    <h3>Description</h3>
+                    <div id="des-content">
+                        <div id="child-content">
+                            <h2>Item Specifics</h2>
+                            <h:dataTable value="#{detailProduct.listSpec}" var="itemSpec" rowClasses="key">
+                                <h:column><h:outputText value="#{itemSpec.key}" rendered="#{detailProduct.isActiveSpec(itemSpec.key)}"/></h:column>
+                                <h:column><h:outputText value="#{itemSpec.value}" rendered="#{detailProduct.isActiveSpec(itemSpec.key)}"/></h:column>
+                            </h:dataTable>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="review" class="tabcontent">
+                    <h3>Review <span></span></h3>
+                    <h:body>
+                        <h:form id="form">
+                            <p:outputPanel id="part-comment" autoUpdate="true" style="width: 950px;
+                                           margin: auto;" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}">
+                                <p style="font-size: 14px;color: cadetblue;">Leave your review about our product</p>
+                                <p:rating value="#{detailProduct.rateMark}" required="true" rendered="#{detailProduct.isRated == false}"></p:rating>
+                                <p:rating value="#{detailProduct.rateCurrent}" readonly="true" rendered="#{detailProduct.isRated == true}" ></p:rating>
+
+                                <h:inputTextarea value="#{detailProduct.review}" id="comment" style="height: 100px" validatorMessage="from 10 to 1000 charater">
+                                    <f:validateLength minimum="10" maximum="1000"/>
+                                </h:inputTextarea>  
+                                <p:message for="comment" style="color: red;" display="text"/>
+                                <h:outputLabel value="You has been review for this branch!" rendered="#{detailProduct.isExit == true}" style="color: red;font-size: 12px;"/>
+                                <h:outputLabel value="You cannot review with character is blank space and rates is 0!" rendered="#{detailProduct.isValidate == true}" style="color: red;font-size: 12px;"/>
+                                <h:outputLabel value="You need update your account to review!" rendered="#{detailProduct.isValidname == true}" style="color: red;font-size: 12px;"/>
+                                <h:commandButton value="Review" style="margin-left: 434.935px;margin-right: 434.935px" >
+                                    <p:ajax listener="#{detailProduct.insertReviewProduct()}" process="@parent" update="@form"/>
+                                </h:commandButton>
+                            </p:outputPanel>
+
+                            <div id="container" style="margin-top: 50px">
+                                <ul id="comments">
+                                    <ui:repeat var="itemRview" value="#{detailProduct.listReview}">
+                                        <li class="cmnt">
+                                            <div class="avatar">
+                                                <p:graphicImage value="#{detailProduct.xml.getAvatar(itemRview.customerID.customerInfo.descriptions)}"/>
+                                            </div>
+                                            <div class="cmnt-content">
+                                                <header>
+                                                    <a class="user-link">#{itemRview.customerID.customerInfo.customerName}</a><span class="time-post">#{itemRview.timePost}</span>
+                                                </header>
+                                                <p>#{itemRview.comments}</p>
+                                            </div>
+                                            <style>
+                                                .btnNoBorder{
+                                                    border: none;
+                                                    margin: 3px 0 0 3px;
+                                                    cursor: pointer;
+                                                    display: inline-block;
+                                                    background: no-repeat url(/T2MH-war/Images/Icons/Uncheck.png);
+                                                    background-size: 15px 15px;
+                                                    width: 15px;
+                                                    height: 15px;
+                                                    float: right;
+                                                    text-decoration: none;
+                                                }
+                                                .ui-messages-error, .ui-message-error
+                                                {
+                                                    color: red;
+                                                    border: none;
+                                                    background-color: #ffffff;
+                                                    padding: 0px;
+                                                    font-size: 12px;
+                                                }
+                                                .ui-message-info, .ui-message-error, .ui-message-warn, .ui-message-fatal
+                                                {
+                                                    color: red;
+                                                    border: none;
+                                                    background-color: #ffffff;
+                                                    padding: 0px;
+                                                    font-size: 12px;
+                                                }
+                                                span.ui-message-error-detail
+                                                {
+                                                    font-size: 12px
+                                                }
+                                            </style>
+
+                                            <p:link outcome="detailReviewProduct" value="View More Comment" style="text-decoration: none;
+                                                    color: cadetblue;
+                                                    font-size: 14px;">
+                                                <f:param value="#{itemRview.prid}" name="reviewProductID"/>
+                                            </p:link>
+                                        </li>
+
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                            <div class="pagination">
+                                <ui:repeat var="item3" value="#{detailProduct.listPages}">
+                                    <h:commandLink  value="#{item3}"  class="link">
+                                        <p:ajax update="@form" process="@this" listener="#{detailProduct.loadReviewProduct(item3)}"/>
+                                    </h:commandLink>
+                                </ui:repeat>
+                            </div>
+                            <p:remoteCommand name="enterANewComment"  actionListener="#{detailProduct.insertcommentPR()}" process="@this" update="@form"/>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                $("textarea[id$=':commentRV']").on('keypress', function (e) {
+                                    if ($("textarea[id$=':commentRV']").val().trim().length === 0 && e.which !== 13)
+                                    {
+                                        return;
+                                    }
+                                    if ($("textarea[id$=':commentRV']").val().trim().length === 0 && e.which === 13)/*avoid submit reset list image file when input tags empty and press enter*/
+                                    {
+                                        return false;
+                                    }
+                                    if (e.which === 13)
+                                    {
+
+                                        enterANewComment();
+
+                                    }
+
+                                    return e.which !== 13;
+
+                                });
+
+                                //]]>
+                            </script>
+                        </h:form>
+                    </h:body>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            //<![CDATA[
+            function openCity(evt, tab) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(tab).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+            document.getElementById("defaultOpen").click();
+            function imgfunc()
+            {
+                var bigImage = document.getElementById("bigImg");
+                var thumbnails = document.getElementById("thumbnail");
+                thumbnails.addEventListener("click", function (event) {
+                    if (event.target.tagName === "IMG")
+                    {
+                        bigImage.src = event.target.src;
+                    }
+                }, false);
+            }
+            window.addEventListener("load", imgfunc, false);
+
+
+            // ]]>
+
+        </script>
+    </ui:define>
+</ui:composition>
+

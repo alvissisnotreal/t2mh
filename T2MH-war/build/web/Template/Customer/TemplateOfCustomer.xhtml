@@ -1,0 +1,392 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewprot"/>
+        <meta http-equiv="X-UA-Conpatible" content="IE=edge"/>
+        <h:outputStylesheet library="css"  name="css-customer.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css"  name="list-product-css.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css"  name="detail-brand.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css"  name="css-product.css"></h:outputStylesheet>
+        <title>T2MH</title>
+        <style>
+            .body{
+                word-break: break-all;
+            }
+        </style>
+    </h:head>
+
+    <h:body class="body">
+        <f:metadata>
+            <f:viewAction action="#{showTemplate.showCate()}"/>
+        </f:metadata>
+        <ui:insert name="header">
+            <div id="wrapper">
+                <div class="top-header">
+                    <ul class="top-header-function" style="margin-top: 10px;">
+                        <li class="top-header-element-1">
+                            <span class="top-header-element-text">
+                                <span class="top-header-element-text">Hi
+                                </span>
+                            </span>
+                        </li>
+                        <li class="top-header-element-3">
+                            <h:form>
+                                <p:commandLink class="link-top" rendered="#{empty sessionScope['LOGGED_CUSTOMER']}"  value="Login"  onmouseup="PF('dialogLogin').show();" >
+                                </p:commandLink>
+                                <p:commandLink class="link-top" ajax="false"  value="Log Out" action="#{customerLogin.logout()}" onsuccess="#{customerLogin.reloadLogin()}" 
+                                               rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}" >
+                                </p:commandLink>
+                            </h:form>
+                        </li>
+                        <li class="top-header-element-3">
+                            <p:link class="link-top" outcome="/Customer/registerCustomer" rendered="#{empty sessionScope['LOGGED_CUSTOMER']}">Register</p:link>
+                            <p:link class="link-top" outcome="/Customer/infoCustomer" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}">Info</p:link>
+                        </li>
+                        <li class="top-header-element-3">
+                            <h:form>
+                                <p:commandLink class="link-top" rendered="#{empty sessionScope['LOGGED_CUSTOMER']}"  value="Feedback"  onmouseup="PF('dialogLogin').show();" >
+                                </p:commandLink>
+                                <p:commandLink class="link-top" onclick="#{cusFeedback.reloadPage()}"  value="Feedback" onmouseup="PF('dialogFeedback').show();"
+                                               rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}" process="@this">
+                                </p:commandLink>
+                            </h:form>
+                        </li>
+                        <c:if test="#{not empty sessionScope['LOGGED_CUSTOMER']}">
+                            <li class="top-header-element-3">
+                                <p:link class="link-top" outcome="/Customer/ViewListFeedback" value="Feedback History" style="font-size: 1.1em;" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}">
+                                </p:link>
+                            </li>
+                        </c:if>
+
+
+                        <li class="top-header-element-3">
+                            <p:link class="link-top" outcome="/Customer/ViewCartOrder" value="View Cart">
+                            </p:link>
+                        </li>
+                        <c:if test="#{not empty sessionScope['LOGGED_CUSTOMER']}">
+                            <li class="top-header-element-3">
+                                <p:link class="link-top" outcome="/Customer/OrderHistory" value="Order History" style="font-size: 1.1em;" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}">
+                                </p:link>
+                            </li>   
+                        </c:if>
+
+
+                    </ul>   
+                </div>
+                <div id="header">
+                    <div id="header-top">
+                        <div id="logo">
+                            <p:graphicImage value="/Images/Icons/logo-index.jpg"/>
+                        </div>
+                        <div id="cari">
+                            <h:form>
+                                <style>
+                                    .ui-inputfield.ui-inputtext.ui-widget.ui-state-default.ui-corner-all.inputTextSearch{
+                                        width:200px;
+                                        padding:7px;
+                                        border:solid 1px #59b8cc;
+                                        box-shadow: none;
+
+                                    }
+                                    .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.btnSearchProduct{
+                                        padding:1.7px;
+                                        background:#59b8cc;
+                                        border:solid 1px #59b8cc;
+                                        color:white;
+                                        margin-left:-5px;
+                                        box-shadow: none;
+                                        text-shadow:none;
+                                        font-weight: inherit;
+                                        border: none;
+                                        padding-top: 2.5px;
+                                        padding-bottom: 3.5px;
+                                    }
+                                </style>
+                                <p:inputText class="inputTextSearch" value="#{searchBox.searchInput}">
+                                    <p:ajax />
+                                </p:inputText>
+                                <p:commandButton class="btnSearchProduct"  value="Search" ajax="false" action="#{searchBox.searchBox()}"/>
+                                <!--<input type="text" name="cari" id="search"></input>-->
+                                <!--<input type="submit" name="Search" id="submit" value="Search"></input>-->
+                            </h:form>
+                        </div>
+                    </div>
+                    <div id="header-center">
+                        <div class="menu-wrapper">
+                            <ul id="menu">
+                                <ui:repeat var="item" value="#{showTemplate.list}">
+                                    <li>
+                                        <p:link class="drop" outcome="/Customer/ShowAllProduct">
+                                            #{item.cateName}
+                                            <f:param name="catID" value="#{item.cateID}" ></f:param>
+                                        </p:link>                                      
+                                        <div class="dropdown_4columns">
+                                            <ui:repeat var="item2" value="#{showTemplate.convert(item.groupsCollection)}">
+                                                <p:outputPanel rendered="#{item2.groupStatus == 1}">
+                                                    <div class="col_1">
+                                                        <p:link class="drop" outcome="/Customer/ShowAllProduct">
+                                                            #{item2.groupName}
+                                                            <f:param name="groupID" value="#{item2.groupID}" ></f:param>  
+                                                        </p:link>
+                                                        <ul>
+                                                            <li><a href="#"></a></li>
+                                                            <li><a href="#"></a></li>
+                                                        </ul>                                                   
+                                                    </div>
+                                                </p:outputPanel>
+                                            </ui:repeat>
+
+                                        </div>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="header-bottom"></div>
+
+                </div>
+            </div>
+        </ui:insert>
+
+
+        <ui:insert name="content">
+            <div id="content" style="height: 1000px;">
+
+            </div>
+        </ui:insert>
+        <ui:insert name="footer">
+            <div id="footer">
+                <div class="content-footer" style="text-align: center;margin: auto;text-align: center;">
+
+                    <a style="color: white;font-weight: bold;text-align: center;margin: auto;">T2MH Corp</a>
+
+                </div>
+            </div>
+
+        </ui:insert>
+        <style>
+            .ui-growl{
+                width: 400px;
+                background: inherit;
+                color: wheat;
+            }
+            .ui-growl-message {
+                padding: 0 0 5px 0;
+                width: 325px;
+                float: right;
+            }
+            .ui-growl-item-container{
+                display: block;
+                background: #663399;
+                color: beige;
+            }
+        </style>
+        <p:dialog  header="Login" widgetVar="dialogLogin" id="dialogLogin" width="400" closeOnEscape="true" modal="true" resizable="false">
+            <style>
+                .ui-dialog-titlebar.ui-widget-header.ui-helper-clearfix.ui-corner-top.ui-draggable-handle
+                {
+                    background: none;
+                }
+                .ui-panelgrid-content.ui-widget-content.ui-grid ui-grid-responsive{
+                    border: none;
+                }
+                .ui-widget-content{
+                    border: none;
+                }
+                .ui-panelgrid-cell.ui-grid-col-6
+                {
+                    width: 100%;
+                }
+                .ui-growl-message p {
+                    font-weight: normal;
+                    width: 300px;
+                }
+            </style>
+            <p:panelGrid columns="2" layout="grid" id="loginPanel">
+                <h:form rendered="#{empty sessionScope['LOGGED_CUSTOMER']}">
+                    <p:outputLabel value="#{customerLogin.messageLogin}" style="color: red;"/>
+                    <p:panelGrid columns="2" rendered="#{empty sessionScope['LOGGED_CUSTOMER']}" >                   
+                        <p:outputLabel for="Username" value="Username" />
+                        <h:inputText id="Username" value="#{customerLogin.customer.customerUsername}" required="true" requiredMessage="The Username field is required."/>                
+                        <p:outputLabel for="Password" value="Password" />
+                        <h:inputSecret id="Password" value="#{customerLogin.customer.customerPassword}" required="true" requiredMessage="The Password field is required."/>                    
+                    </p:panelGrid>
+                    <p:commandButton value="Login" actionListener="#{customerLogin.fastLogin()}" onclick="#{customerLogin.reloadLogin()}" 
+                                     ajax="true"  update="loginPanel" onstart="PF('dialogLogin').show();"
+                                     style="margin: auto;margin-left: 40%;margin-top: 20px;"/>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog> 
+        <p:dialog  header="Orders Information" widgetVar="dialogOrderInfo" id="dialogOrderInfo" width="1200" onShow="#{customerOrder.loadInfoCustomer()}" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}" closeOnEscape="true" modal="true" resizable="false" >
+            <style>
+                .panelGridcolumn1
+                {
+                    width: 250px;
+                    text-align: right;
+                }
+                .panelGridcolumn1.ui-grid-col-6
+                {
+                    width: 300px;
+                }
+
+                .panelGridcolumn2
+                {
+                    /*width:1000px;*/
+                }
+                .panelGridcolumn2.ui-grid-col-6
+                {
+                    width:800px;
+                }
+                .panelGridcolumn2.ui-grid-col-6 input
+                {
+                    width:400px;
+                }
+                .panelGridcolumn2.ui-grid-col-6.ui-selectonelistbox
+                {
+                    width:700px;
+                }
+                .panelGridcolumn2.ui-grid-col-6 textarea
+                {
+                    width:90%;
+                }
+            </style>
+            <h:form>
+                <h:panelGrid id="dialogOrderForm" columns="3"  columnClasses="panelGridcolumn1,panelGridcolumn2" cellpadding="5" >       
+                    <p:outputLabel for="sender" value="Sender: " style="font-weight:bold"/>
+                    <p:inputText id="sender" value="#{customerOrder.order.sender}" required="true" requiredMessage="Sender field is required."
+                                 validatorMessage="Sender Have Length Up To 100 Characters">
+                        <f:validateLength maximum="100"/>
+                        <p:ajax/>
+                    </p:inputText>
+                    <p:message for="sender" display="text"/>
+
+                    <p:outputLabel for="senderPhone" value="Sender Phone: " style="font-weight:bold"/>
+                    <p:inputText id="senderPhone" value="#{customerOrder.order.senderPhone}" required="true" requiredMessage="Sender Phone field is required."
+                                 validatorMessage="Sender Phone Must Have Length From 6 To 20 Characters">
+                        <p:keyFilter regEx="/[0-9 \+\(\)]/i"/>
+                        <f:validateLength minimum="6" maximum="20"/>
+                        <p:ajax/>
+                    </p:inputText>  
+                    <p:message for="senderPhone" display="text"/>
+
+                    <p:outputLabel for="receiver" value="Receiver: " style="font-weight:bold"/>
+                    <p:inputText id="receiver" value="#{customerOrder.order.receiver}" required="true" requiredMessage="Receiver field is required."
+                                 validatorMessage="Receiver Have Length Up To 100 Characters">
+                        <f:validateLength maximum="100"/>
+                        <p:ajax/>
+                    </p:inputText> 
+                    <p:message for="receiver" display="text"/>
+
+                    <p:outputLabel for="receiverPhone" value="Receiver Phone: " style="font-weight:bold"/>
+                    <p:inputText id="receiverPhone" value="#{customerOrder.order.receiverPhone}" required="true" requiredMessage="Receiver Phone field is required."
+                                 validatorMessage="Receiver Phone Must Have Length From 6 To 20 Characters">
+                        <p:keyFilter regEx="/[0-9 \+\(\)]/i"/>
+                        <f:validateLength minimum="6" maximum="20"/>
+                        <p:ajax/>
+                    </p:inputText> 
+                    <p:message for="receiverPhone" display="text"/>
+
+                    <p:outputLabel for="receiverAddress" value="Receiver Address: " style="font-weight:bold" />
+                    <p:inputTextarea id="receiverAddress" value="#{customerOrder.order.receiverAddress}" required="true" requiredMessage="Receiver Address field is required." 
+                                     rows="4" style="width: 700px;resize: none;" autoResize="false" validatorMessage="Address's From 20 To 200 Characters" >
+                        <f:validateLength minimum="20" maximum="200" />
+                        <p:ajax/>
+                    </p:inputTextarea> 
+
+                    <p:message for="receiverAddress" display="text"/>
+
+                    <p:outputLabel for="descriptions" value="Note: " style="font-weight:bold" />
+                    <p:inputTextarea id="descriptions" value="#{customerOrder.des}" rows="4" style="width: 700px;resize: none;"  autoResize="false" validatorMessage="Note's Length Up To 1000 Characters">
+                        <f:validateLength  maximum="1000" />
+                        <p:ajax/>
+                    </p:inputTextarea> 
+
+                    <p:message for="descriptions" display="text"/>
+
+                </h:panelGrid>
+                <h:panelGrid style="margin: auto">
+                    <p:commandButton actionListener="#{customerOrder.confirmOrder()}"  value="Confirm" ajax="true" process="@form" update="dialogOrderForm"
+                                     style="margin: 15px 0 0  15px;font-weight: bold;color: indigo;background-color: antiquewhite;" >
+                    </p:commandButton>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+        <p:dialog widgetVar="dialogFeedback" id="dialogFeedback" width="1200" closeOnEscape="true" modal="true" resizable="false">
+            <style>
+                .panelGridcolumnFeedback1
+                {
+                    width: 150px;
+                    text-align: right;
+
+                }
+                .panelGridcolumnFeedback1.ui-grid-col-6
+                {
+                    width: 100px;
+                }
+
+                .panelGridcolumnFeedback2
+                {
+                    /*width:100%;*/
+                }
+                .panelGridcolumnFeedback2.ui-grid-col-6
+                {
+                    width:100%;
+                }
+                .panelGridcolumnFeedback2.ui-grid-col-6 input
+                {
+                    width:400px;
+                }
+                .panelGridcolumnFeedback2.ui-grid-col-6.ui-selectonelistbox
+                {
+                    width:400px;
+                }
+                .panelGridcolumnFeedback2.ui-grid-col-6 textarea
+                {
+                    width:90%;
+                }
+            </style>
+            <h:form>
+                <p:growl id="dialogFeedbackMessage" showDetail="true" autoUpdate="true" escape="false" />
+                <h:panelGrid columns="3" rendered="#{not empty sessionScope['LOGGED_CUSTOMER']}" columnClasses="panelGridcolumnFeedback1,panelGridcolumnFeedback2" cellpadding="5" style="width: 100%">       
+                    <f:facet name="header">
+                        <h:outputText value="Feedback Information" style="text-align: center;"/>
+                    </f:facet>
+                    <p:outputLabel for="fbTitle" value="Title: " style="font-weight:bold;width: 200px;"/>
+                    <p:inputText id="fbTitle" value="#{cusFeedback.feedback.title}" required="true" requiredMessage="Title field is required."
+                                 validatorMessage="Length's Title Only Accept From 10 to 100 Characters" style="width: 100%;"   >
+                        <f:validateLength maximum="100" minimum="10"/>
+                        <p:ajax/>
+                    </p:inputText>
+                    <p:message for="fbTitle"/>
+
+                    <p:outputLabel for="fbContent" value="Content: " style="font-weight:bold;width: 200px;"/>
+                    <p:inputTextarea id="fbContent" value="#{cusFeedback.feedback.content}" required="true" requiredMessage="Content field is required." cols="50" rows="10"
+                                     validatorMessage="Length's Feedback Content Only Accept From 10 to 5000 Characters" style="width: 100%;resize: none;"  autoResize="false" scrollHeight="10">
+                        <f:validateLength minimum="10" maximum="5000"/>
+                        <p:ajax/>
+                    </p:inputTextarea>  
+                    <p:message for="fbContent"/>
+
+                </h:panelGrid>
+                <h:panelGrid style="margin: auto">
+                    <p:commandButton actionListener="#{cusFeedback.createFeedback()}"  value="Confirm" ajax="true" process="@this" update="@form"
+                                     style="margin: 15px 0 0  15px;font-weight: bold;color: indigo;background-color: antiquewhite;" >
+                    </p:commandButton>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" ></h:outputScript>
+        <script language="javascript">
+
+        </script>
+    </h:body>
+
+</html>
+

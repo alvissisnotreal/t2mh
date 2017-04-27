@@ -1,0 +1,63 @@
+<ui:composition template="../../Template/BranchManager/TemplateBM.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{bmProduct.isAllowed()}" rendererType="preRenderView" />
+                <f:viewAction action="#{bmPayment.loadDetails()}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                <p:growl id="messagesUpdate" showDetail="true" autoUpdate="true" />
+                <h:form id="info" rendered="#{not empty bmPayment.payment}">
+
+
+                    <p:panelGrid layout="grid" columns="2" columnClasses="panelGridcolumn1,panelGridcolumn2" >                 
+
+                        <f:facet name="header">
+                            <h:outputText value="Details Payment"/>
+                        </f:facet>
+                        <p:outputLabel for="ID" value="ID: " style="font-weight:bold" title="ID"/>                    
+                        <p:outputLabel id="ID"  value="#{bmPayment.payment.paymentID}" >
+                        </p:outputLabel>
+
+                        <p:outputLabel for="branchID" value="BranchID: " style="font-weight:bold" title="Branch ID"/>                    
+                        <p:outputLabel id="branchID"  value="#{bmPayment.branch.branchID}" >
+                        </p:outputLabel>
+
+                        <p:outputLabel for="TimeCreate" value="Date Create:" style="font-weight:bold" title="Date Create"/>                    
+                        <p:outputLabel id="TimeCreate" value="#{bmPayment.payment.timeCreate}"  >
+                        </p:outputLabel>
+
+                        <p:outputLabel for="DateFrom" value="Start Date:" style="font-weight:bold"/>                    
+                        <p:outputLabel id="DateFrom" value="#{bmPayment.payment.startDate}">
+                        </p:outputLabel>
+
+                        <p:outputLabel for="DateTo" value="End Date:" style="font-weight:bold" />                    
+                        <p:outputLabel id="DateTo" value="#{bmPayment.payment.endDate}">
+                        </p:outputLabel>
+
+                        <p:outputLabel for="Amount" value="Amount:" style="font-weight:bold" />                    
+                        <p:outputLabel id="Amount" value="#{bmPayment.payment.amount}"  >
+                            <f:convertNumber integerOnly="true"/>
+                        </p:outputLabel>
+
+                        <p:outputLabel for="Paid" value="Paid:" style="font-weight:bold" />                    
+                        <p:outputLabel id="Paid" value="#{bmPayment.payment.paid}" >
+                            <f:convertNumber integerOnly="true"/>
+                        </p:outputLabel>
+
+                        <p:outputLabel for="Debt" value="Debt:" style="font-weight:bold" />    
+                        <p:outputLabel id="Debt" value="#{bmPayment.payment.debt}"  >
+                            <f:convertNumber integerOnly="true"/>
+                        </p:outputLabel>
+                    </p:panelGrid>         
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>
