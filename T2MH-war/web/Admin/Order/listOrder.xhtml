@@ -1,0 +1,75 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutEmployee.isAllowed('Role02')}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <p:growl id="messagesUpdate" showDetail="true" severity="info, warn, error"/>
+                <h:form id="form" >  
+                    <p:dataTable id="listOrder" widgetVar="listOrder" var="item" value="#{orderListView.lazyModel}"  resizableColumns="true" 
+                                 rows="10" style="background-color: lightblue"
+                                 paginator="true"  lazy="true" 
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15,20" >
+
+
+
+                        <f:facet name="header">
+                            <h:outputText value="List Orders" style="color: #FF8282"/>
+
+                        </f:facet>
+
+                        <p:column headerText="OrderID" sortBy="#{item.orderID}" filterBy="#{item.orderID}" style="margin: auto;width: 125px;">
+                            <h:outputText value="#{item.orderID}" style="margin: auto;text-align: center;display: block;width: 125px;"/> 
+                        </p:column>
+
+                        <p:column headerText="CustomerID" sortBy="#{customerID}" filterBy="#{customerID}"  style="margin: auto;width: 125px;">
+                            <h:outputText value="#{item.cusID}" style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="OrderStatus" sortBy="#{orderStatusName}" filterBy="#{orderStatusName}"  style="margin: auto;text-align: center;width: 195px;">
+                            <f:facet name="filter" >
+                                <p:selectOneMenu  onchange="PF('listOrder').filter()"  filterMatchMode="Exact" style="text-align: center;">
+                                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{aboutOrder.allOrderStatus}" var="OS" itemLabel="#{OS.orderStatusName}" itemValue="#{OS.orderStatusName}"  />
+                                    <p:ajax/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{item.orderStatusName}" style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="Time Order" sortBy="#{item.timeOrder}" filterBy="#{item.timeOrder}"  style="margin: auto;width: 185px;">
+                            <h:outputText value="#{item.timeOrder}" style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="Price Total" sortBy="#{item.priceTotal}" filterBy="#{item.priceTotal}"  style="margin: auto">
+                            <h:outputText value="#{item.priceTotal}" style="margin: auto;text-align: center;display: block">
+                                <f:convertNumber integerOnly="true"/>
+                            </h:outputText> 
+                        </p:column>
+                        <p:column style="text-align: center;margin: auto;" headerText="Action" >
+                            <p:link class="btn" value="Details/Update" outcome="detailsOrder" target="_blank" style="margin: auto;width: 225px;">
+                                <f:param name="orderID" value="#{item.orderID}"/>
+                            </p:link>
+                            <p:commandButton rendered="#{item.orderStatusID.orderStatusID ne 1 
+                                                         and item.orderStatusID.orderStatusID ne 1 }" icon="fa fa-print" value="Print Bill" actionListener="#{aboutOrder.goPrint(item.orderID)}" 
+                                             oncomplete="window.open('OrderBill_Corp.xhtml','_blank'),window.open('OrderBill_Customer.xhtml','_blank')"
+                                             style="margin-left: 10px;" process="@this">
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

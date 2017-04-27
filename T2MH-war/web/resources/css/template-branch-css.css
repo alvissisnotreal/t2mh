@@ -1,0 +1,317 @@
+@charset "utf-8";
+/* CSS Document */
+
+body
+{
+    background-color:#FFF;
+    color:#000305;
+    font-size:14px;
+    font-family:Tahoma, Geneva, sans-serif;
+    line-height:1.5;
+    text-align:left;
+}
+a{
+    text-decoration:none;
+}
+
+.body
+{
+    margin:0 auto;
+    width:1320px;
+    clear:both;
+}
+.main-header img
+{
+    width:396px;
+    /*height:auto;*/
+    margin:20px 0;
+}
+.main-header nav
+{       
+    align-items: center;
+    background-color:#59b8cc;
+    height:40px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px; 
+}
+/*.main-header nav ul
+{
+        list-style:none;
+        margin:0 auto;
+}
+.main-header nav ul li
+{
+        float:left;
+        display:inline;
+}*/
+/*.main-header nav a:link
+{
+        color:#fff;
+        display:inline-block;
+        padding:10px 25px;
+        height:20px;
+}*/
+/*.main-header nav a:hover
+{
+        background-color:#CF5C3F;
+        text-shadow:none;
+}*/
+/*.main-header nav ul li a
+{
+        border-radius:5px;
+        -moz-border-radius:5px;
+        -webkit-border-radius:5px;
+}*/
+
+.main-content
+{
+    line-height:25px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+
+}
+.content
+{
+    width:1320px;
+}
+.top-content
+{
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    padding:30px 50px;
+    margin-top:20px;
+}
+.footer
+{
+    width:1320px;
+    height:80px;
+    float:left;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background-color:#59b8cc;
+    margin-top:20px ;
+}
+.footer p
+{
+    width:1000px;
+    margin:10px;
+    color:#fff;
+}
+.fixed-nav {
+    position: fixed;
+    width: 1320px;
+    top: 0;
+    z-index: 20;
+
+}
+/*----------------------------------------*/
+
+/*.ui-menu-toggleable
+{
+    background-color: lightseagreen;
+    width: 100%;
+    display: inherit;
+}*/
+/*.ui-menuitem-link.ui-submenu-link.ui-corner-all{
+    margin-bottom: 10px;
+    margin-right: 6%;
+}*/
+/*-------------------------*/
+
+
+.ui-menuitem-icon.ui-icon
+{
+    color: navy;
+    border-radius: 0px;
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    align-content: center;
+}
+
+li.ui-widget-header.ui-corner-all
+{
+    width: fit-content;
+    background-color: lightblue;
+}
+
+.ui-menuitem-link.ui-corner-all.ui-state-hover {
+    background-color: aqua;
+}
+
+.ui-helper-clearfix
+{
+    background-color: lightseagreen;
+    border-style: double;
+}
+
+.ui-widget-content.ui-menu-list.ui-corner-all.ui-helper-clearfix.ui-menu-child.ui-shadow{
+    background-color: lightskyblue;
+}
+
+.noBorderPanelGrid
+{
+    align-self: center;
+    margin-left: 480px;
+}
+.noBorderPanelGrid tbody tr
+{
+    border-style: none;
+}
+.noBorderPanelGrid tbody tr td
+{
+    border-style: none;
+}
+.noBorderPanelGrid.ui-panelgrid .ui-panelgrid-cell
+{
+    border-style: none;
+}
+
+.panelGridcolumn1
+{
+    width: 300px;
+    text-align: right;
+}
+.panelGridcolumn1.ui-grid-col-6
+{
+    width: 300px;
+}
+
+.panelGridcolumn2
+{
+    /*width:100%;*/
+}
+.panelGridcolumn2.ui-grid-col-6
+{
+    width:100%;
+}
+.panelGridcolumn2.ui-grid-col-6 input
+{
+    width:400px;
+}
+.panelGridcolumn2.ui-grid-col-6.ui-selectonelistbox
+{
+    width:400px;
+}
+.panelGridcolumn2.ui-grid-col-6 textarea
+{
+    width:90%;
+}
+
+/*SELECT 1 RADIO COMBOBOX*/
+.ui-widget-header .ui-inputfield, .ui-widget-content .ui-inputfield{
+    width: 400px;
+}
+
+/*p:confirm*/
+.confirmDialog{
+    text-align: center;
+}
+/*hightlight*/
+li.ui-selectlistbox-item.ui-corner-all.ui-state-highlight{
+    /*background-color: coral;*/
+    background: brown;
+}
+.ui-inplace-display.ui-state-highlight{
+    background: brown;
+}
+li.ui-selectlistbox-item.ui-corner-all.ui-state-hover{
+    /*background-color: coral;*/
+    background: appworkspace;
+}
+
+
+.noBorderDataGrid div{
+    border: none;
+}
+.columnSpec1{
+    width: 400px;
+    text-align: right;
+}
+.columnSpec2{
+    width: 400px;
+}
+.columnSpec3{
+    width: 50px;
+}
+.noBorderPanelGridSpec
+{
+    /*align-self: center;*/
+}
+.noBorderPanelGridSpec tbody tr
+{
+    border-style: none;
+}
+.noBorderPanelGridSpec tbody tr td
+{
+    border-style: none;
+}
+.noBorderPanelGridSpec.ui-panelgrid .ui-panelgrid-cell
+{
+    border-style: none;
+}
+.ui-datatable.ui-widget.ui-datatable-resizable
+{
+    background: steelblue;
+}
+.tagBorder{
+    margin: 4px;
+    padding: 4px;
+    height: 22px;
+    border: 1px #87939B;
+    border-style: solid;
+    border-radius: 3px;
+    display: inline-block;
+}
+.btnNoBorder{
+    border: none;
+    margin: 3px 0 0 3px;
+    cursor: pointer;
+    display: inline-block;
+    background: no-repeat url(/T2MH-war/Images/Icons/Uncheck.png);
+    background-size: 15px 15px;
+    width: 15px;
+    height: 15px;
+}
+.deleteImageGallary{
+    background: snow;
+    background-color: inherit;
+    color: black;
+    margin-top: 165px;
+    text-align: center;
+    padding-bottom: 3px;
+    position: absolute;
+}
+#tagInput{
+    display: inline-block;
+    height: 60px
+}
+#divInput{
+    text-align: left;
+
+}
+
+#form\:panelCreate tbody tr td{
+    padding-bottom: 20px;
+}
+.ui-widget-header{
+    background: blanchedalmond -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.8)),to(rgba(255,255,255,0)));
+}
+
+/*navigationPage icon*/
+.ui-icon.ui-icon-seek-first{
+    background-position: -80px -156px;
+}
+.ui-icon.ui-icon-seek-prev{
+    background-position: -48px -156px;
+}
+.ui-icon.ui-icon-seek-next{
+    background-position: -32px -156px;
+}
+.ui-icon.ui-icon-seek-end{
+    background-position: -64px -156px;
+}

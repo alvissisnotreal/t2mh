@@ -1,0 +1,64 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutEmployee.isAllowed('Role03')}" rendererType="preRenderView" />
+                <f:viewAction action="#{aboutGroups.loadDetails()}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+
+                <p:growl id="messagesUpdate" showDetail="true" autoUpdate="true" />
+                
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <h:form>
+                    <p:outputPanel id="info" rendered="#{not empty aboutGroups.groups}">
+
+                        <p:panel header="Details/Update Group" >  
+                            <p:panelGrid layout="grid" columns="2" columnClasses="panelGridcolumn1,panelGridcolumn2">  
+
+                                <p:outputLabel for="cateID" value="Category: " style="font-weight:bold" title="cateID"/>
+                                <p:selectOneListbox id="cateID" value="#{aboutGroups.cate.cateID}" required="true" requiredMessage="Status is required!">
+                                    <f:selectItems var="itemCate" value="#{aboutGroups.allCate}" itemLabel="#{itemCate.cateName}" itemValue="#{itemCate.cateID}"   />    
+                                    <p:ajax event="change" listener="#{aboutGroups.categorySelectionChanged}"/>
+                                </p:selectOneListbox>
+
+                                <p:outputLabel for="groupID" value="GroupID: " style="font-weight:bold" title="GroupdID"/>
+                                <p:outputLabel id="groupID" value="#{aboutGroups.groups.groupID}"/>
+
+                                <p:outputLabel for="groupName" value="Group Name: " style="font-weight:bold" title="Group Name"/>                    
+
+
+                                <p:inplace editor="true">
+                                    <p:inputText id="groupName"  value="#{aboutGroups.groups.groupName}" label="Group Name" required="true">
+                                        <!--<p:keyFilter regEx="/[0-9a-zA-Z ,&]/i"/>-->
+                                        <f:validateLength minimum="1" maximum="100"/>
+                                    </p:inputText>
+                                    <p:ajax event="save" update="messagesUpdate" listener="#{aboutGroups.checkNameForUpdate()}"/>
+                                </p:inplace>
+
+                                <p:outputLabel for="Status" value="Status: " style="font-weight:bold" title="Enable"/>
+                                <p:selectOneRadio id="Status" disabled="#{aboutGroups.groups.cateID.cateStatus!=1}" value="#{aboutGroups.groups.groupStatus}" required="true" requiredMessage="Status is required!">
+                                    <f:selectItem itemLabel="Enable" itemValue="1"   />
+                                    <f:selectItem itemLabel="Disable" itemValue="0" />
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="Description" value="Description: " style="font-weight:bold" title="Description"/>                    
+                                <p:inputTextarea id="Description" binding="#{theDescription}"  value="#{aboutGroups.hmDes['Description']}" label="Description" style="resize: vertical;">
+                                </p:inputTextarea>
+
+                            </p:panelGrid>
+                            <p:commandButton ajax="true"  action="#{aboutGroups.updateGroups()}" value="Update" class="ui-state-active" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>                      
+                        </p:panel>
+                    </p:outputPanel>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,99 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <style>
+
+        </style>
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutEmployee.isAllowed('Role02')}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <p:growl id="messagesUpdate" showDetail="true" severity="info, warn, error"/>
+                <h:form id="form" >  
+                    <p:dataTable id="listObject" var="item" value="#{pRListView.lazyModel}"  resizableColumns="true" 
+                                 rows="10" style="background-color: lightblue"
+                                 paginator="true"  lazy="true" 
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15,20" >
+
+                        <f:facet name="header">
+                            <h:outputText value="List Product Review" style="color: #FF8282"/>
+                        </f:facet>
+
+                        <p:column headerText="PRID" sortBy="#{item.prid}" filterBy="#{item.prid}" width="115px;">
+                            <h:outputText value="#{item.prid}" rendered="#{item!=null}"  style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="ProductID" sortBy="#{productID}" filterBy="#{productID}" width="125px;">
+                            <h:outputText value="#{item.productID.productID}" rendered="#{item!=null}"  style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="CustomerID" sortBy="#{customerID}" filterBy="#{customerID}" width="128px;">
+                            <h:outputText value="#{item.customerID.customerID}" rendered="#{item!=null}"  style="margin: auto;text-align: center;display: block"/> 
+                        </p:column>
+
+                        <p:column headerText="Time Post" sortBy="#{item.timePost}" filterBy="#{item.timePost}" width="160px;" >
+                            <h:outputText value="#{item.timePost}" rendered="#{item!=null}"  style="margin: auto;text-align: center;display: block">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Stars" sortBy="#{item.pRStars}" filterBy="#{item.pRStars}" width="110px;"  style="margin: auto;text-align: center;">
+                            <p:rating value="#{item.pRStars}" readonly="true" rendered="#{item!=null}"/> 
+                        </p:column>
+                        <p:column style="text-align: center" headerText="Action" >
+                            <p:commandButton rendered="#{item!=null}" value="Details" update=":form:dialog" actionListener="#{aboutPR.loadDetails()}" oncomplete="PF('dialog').show();" process="@this">
+                                <f:param value="#{item.prid}" name="PRID" />
+                            </p:commandButton>
+                            <p:commandButton rendered="#{item!=null}" value="Delete" actionListener="#{aboutPR.delete(item.prid)}" style="margin-left: 10px;" process="@this" update="@form">
+                                <p:confirm header="Confirmation" message="Are you sure?" icon="fa fa-question-circle" />
+                            </p:commandButton>
+
+                            <p:confirmDialog rendered="#{item!=null}" global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dialog header="Details Product Review" widgetVar="dialog" id="dialog" modal="true" width="1200" closeOnEscape="true" >
+                        <!--<p:outputPanel id="infoDialog">-->
+                        <p:panelGrid columns="2" layout="grid" columnClasses="panelGridcolumn1,panelGridcolumn2">
+                            <p:outputLabel for="PRID" value="PR ID:" style="font-weight:bold" />                    
+                            <p:outputLabel id="PRID"  value="#{aboutPR.pr.prid}" >
+                            </p:outputLabel>
+
+                            <p:outputLabel for="ProductID" value="Product ID:" style="font-weight:bold" />                    
+                            <p:outputLabel id="ProductID"  value="#{aboutPR.pr.productID.productID}" >
+                            </p:outputLabel>
+
+                            <p:outputLabel for="CustomerID" value="Customer ID:" style="font-weight:bold" />                    
+                            <p:outputLabel id="CustomerID"  value="#{aboutPR.pr.customerID.customerID}" >
+                            </p:outputLabel>
+
+                            <p:outputLabel for="TimePost" value="Date Post:" style="font-weight:bold" />                    
+                            <p:outputLabel id="TimePost"  value="#{aboutPR.pr.timePost}" >
+                            </p:outputLabel>
+
+                            <p:outputLabel for="Stars" value="Mark:" style="font-weight:bold" />                    
+                            <p:rating id="Stars"  value="#{aboutPR.pr.PRStars}" readonly="false" >
+                            </p:rating>
+
+                            <p:outputLabel for="Comment" value="Comment:" style="font-weight:bold" />                    
+                            <p:inputTextarea readonly="true" id="Comment"  value="#{aboutPR.pr.comments}" >
+                            </p:inputTextarea>
+                        </p:panelGrid>
+                        <!--</p:outputPanel>-->
+                    </p:dialog> 
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

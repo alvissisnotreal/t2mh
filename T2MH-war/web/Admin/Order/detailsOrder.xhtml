@@ -1,0 +1,162 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutOrder.isAllowed('Role02')}" rendererType="preRenderView" />
+                <f:viewAction action="#{aboutOrder.loadDetails()}" rendererType="preRenderView" />
+            </f:metadata>
+            <h:body>
+                <p:growl id="messagesUpdate" showDetail="true" autoUpdate="true" />
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage value="/Images/Icons/ajaxloadingbar.gif"/>
+                </p:dialog>
+                <h:form id="form">
+                    <p:commandButton rendered="#{aboutOrder.order.orderStatusID.orderStatusID ne 1 
+                                                 and aboutOrder.order.orderStatusID.orderStatusID ne 5  }" icon="fa fa-print" value="Print Bill" actionListener="#{aboutOrder.goPrint()}" 
+                                     oncomplete="window.open('OrderBill_Corp.xhtml','_blank'),window.open('OrderBill_Customer.xhtml','_blank')"
+                                     style="margin-left: 10px;" process="@this">
+                    </p:commandButton>
+                    <p:outputPanel id="info" rendered="#{not empty aboutOrder.order}">
+                        <p:panel header="Details/Update Order" >  
+                            <p:panelGrid layout="grid" columns="2" columnClasses="panelGridcolumn1,panelGridcolumn2">                 
+
+                                <p:outputLabel for="OrderID" value="Order ID: " style="font-weight:bold" title="Order ID"/>                    
+                                <p:outputLabel id="OrderID"  value="#{aboutOrder.order.orderID}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="CustomerID" value="CustomerID: " style="font-weight:bold" title="Customer ID"/>                    
+                                <p:outputLabel id="CustomerID"  value="#{aboutOrder.order.customerID.customerID}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="OrderStatusID" value="Order Status:" style="font-weight:bold" title="Order Status"/>                    
+                                <p:selectOneListbox id="OrderStatusID" value="#{aboutOrder.order.orderStatusID.orderStatusID}" valueChangeListener="#{aboutOrder.orderChangeStatus}" >
+                                    <f:selectItems var="itemOS" value="#{aboutOrder.allOrderStatus}" itemLabel="#{itemOS.orderStatusName}" itemValue="#{itemOS.orderStatusID}"  
+                                                   itemDisabled="#{((itemOS.orderStatusID eq 4 or itemOS.orderStatusID eq 5) and (aboutOrder.allAlready ne true))
+                                                                   or aboutOrder.order.orderStatusID.orderStatusID eq 1 
+                                                                   or aboutOrder.order.orderStatusID.orderStatusID eq 4 
+                                                                   or aboutOrder.order.orderStatusID.orderStatusID eq 5  
+                                                                   or itemOS.orderStatusID eq 2 or itemOS.orderStatusID eq 3 }" >
+
+                                    </f:selectItems> 
+                                    <p:ajax />
+                                </p:selectOneListbox>
+
+                                <p:outputLabel for="EditBy" value="Edit By:" style="font-weight:bold;color: red;" rendered="#{aboutOrder.hmDes['EditBy']!=null}"/>                    
+                                <h:outputText id="EditBy" value="#{aboutOrder.hmDes['EditBy']}"  rendered="#{aboutOrder.hmDes['EditBy']!=null}"/> 
+
+                                <p:outputLabel for="Reason" value="Reason:" style="font-weight:bold;color: red" rendered="#{aboutOrder.hmDes['EditReason']!=null}"/>                    
+                                <h:outputText id="Reason" value="#{aboutOrder.hmDes['EditReason']}"  rendered="#{aboutOrder.hmDes['EditReason']!=null}"/> 
+
+                                <p:outputLabel for="TimeOrder" value="Time Order: " style="font-weight:bold"/>                    
+                                <p:outputLabel id="TimeOrder" value="#{aboutOrder.order.timeOrder}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="TimeDelivery" value="Time Delivery:" style="font-weight:bold" />                    
+                                <p:outputLabel id="TimeDelivery" value="#{aboutOrder.order.timeDelivery}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="Sender" value="Sender/Buyer: " style="font-weight:bold"/>
+                                <p:outputLabel id="Sender" value="#{aboutOrder.order.sender}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="SenderPhone" value="Sender/Buyer Phone:" style="font-weight:bold"/>
+                                <p:outputLabel id="SenderPhone" value="#{aboutOrder.order.senderPhone}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="Receiver" value="Receiver Name:" style="font-weight:bold"/>
+                                <p:outputLabel id="Receiver" value="#{aboutOrder.order.receiver}">
+                                </p:outputLabel>
+
+                                <p:outputLabel for="ReceiverPhone" value="Receiver Phone:" style="font-weight:bold"/>
+                                <p:outputLabel id="ReceiverPhone" value="#{aboutOrder.order.receiverPhone}">
+                                </p:outputLabel>
+
+
+                                <p:outputLabel for="PriceTotal" value="Total Price: " style="font-weight:bold" />                    
+                                <p:outputLabel id="PriceTotal" value="#{aboutOrder.order.priceTotal}">
+                                    <f:convertNumber integerOnly="true"/>
+                                </p:outputLabel>
+
+                                <p:outputLabel for="ReceiverAddress" value="Receiver Address:" style="font-weight:bold" />                    
+                                <p:inputTextarea id="ReceiverAddress"  label="Receiver Address" rows="3" cols="50" value="#{aboutOrder.order.receiverAddress}" readonly="true" style="resize: vertical;">
+                                </p:inputTextarea>
+
+                                <p:outputLabel for="Descriptions" value="Descriptions: " style="font-weight:bold" />
+                                <p:inputTextarea id="Descriptions"  label="Descriptions"  rows="10" cols="50" value="#{aboutOrder.hmDes['Description']}" readonly="true" style="resize: vertical;">
+                                </p:inputTextarea>
+
+                            </p:panelGrid >
+                            <style>
+                                .ui-dialog-content.ui-widget-content {
+                                    display: none;
+                                }
+                            </style>
+                            <p:confirmDialog header="Are you sure, you can't change this anymore?" closable="false"  global="true" showEffect="fade" hideEffect="fade" widgetVar="dialogConfirm" >
+                                <h:outputText style="text-align: center;align-content: center;display: block;margin: auto;" value="Inventory Of Product Will Roll Back"/>
+                                <div style="margin-left: 30%; margin-top: 20px;">
+                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui ui-icon-check"  process="@this" style="margin: auto;" update="@form">
+                                        <p:ajax listener="#{aboutOrder.acceptChangeStatus()}" update="@form" />
+                                    </p:commandButton>
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui ui-icon-close" process="@this" style="margin: auto;"  update="@form">
+                                        <p:ajax listener="#{aboutOrder.rollBackOrderStatus()}" update="@form"/>
+                                    </p:commandButton>
+
+                                </div>
+                            </p:confirmDialog>
+
+                            <p:panel header="List Product Of Order" style="margin: auto;display: block;text-align: center">
+                                <p:dataTable id="listOrder" var="item" value="#{aboutOrder.listOrderInfo}"  resizableColumns="true" 
+                                             rows="10" style="background-color: lightblue" >
+
+                                    <p:column headerText="Product ID" width="120px;">
+                                        <h:outputText value="#{item.product.productID}" style="text-align: center;align-content: center;display: block;margin: auto;"/> 
+                                    </p:column>
+
+                                    <p:column headerText="Product Name"  >
+                                        <h:outputText value="#{item.product.productName}" style="text-align: center;align-content: center;display: block;margin: auto;"/> 
+                                    </p:column>
+
+                                    <p:column headerText="Quantity" width="140px;">
+                                        <h:outputText value="#{item.quantity}" /> 
+                                    </p:column>
+
+                                    <p:column headerText="Status" width="300px;">
+                                        <p:selectOneMenu value="#{aboutOrder.hmOrderInfoStatus[item.product.productID]}" 
+                                                         style="margin: auto;text-align: center;display: block;" 
+                                                         valueChangeListener="#{aboutOrder.recentOrderInfoStatus}" >
+                                            <f:selectItem itemLabel="Select One" itemValue="#{null}"
+                                                          noSelectionOption="true" itemDisabled="#{aboutOrder.order.orderStatusID.orderStatusID eq 1 
+                                                                                                   or aboutOrder.order.orderStatusID.orderStatusID eq 4 
+                                                                                                   or aboutOrder.order.orderStatusID.orderStatusID eq 5}"/>
+                                            <f:selectItem itemValue="Checked" itemLabel="Checked" itemDisabled="#{aboutOrder.order.orderStatusID.orderStatusID eq 1 
+                                                                                                                  or aboutOrder.order.orderStatusID.orderStatusID eq 4 
+                                                                                                                  or aboutOrder.order.orderStatusID.orderStatusID eq 5}"/>
+                                            <f:selectItem itemValue="Already Delivery" itemLabel="Already" itemDisabled="#{aboutOrder.order.orderStatusID.orderStatusID eq 1 
+                                                                                                                           or aboutOrder.order.orderStatusID.orderStatusID eq 4 
+                                                                                                                           or aboutOrder.order.orderStatusID.orderStatusID eq 5}"/>
+                                            <f:selectItem itemValue="Successful Transaction" itemLabel="Successful" itemDisabled="true"/>
+                                            <f:selectItem itemValue="#{'Fail' or 'Admin Cancel' or 'Refuse'}" itemLabel="Fail"  itemDisabled="true"/>
+                                            <p:ajax event="change" listener="#{aboutOrder.changeOrderInfoStatus(item.product.productID)}" update="@form" process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+                                    <p:column style="text-align: center" headerText="Action" >
+                                        <p:link class="btn" value="Details Product" href="/Admin/Product/detailsProduct.xhtml?productID=#{item.product.productID}" target="_blank">
+                                        </p:link>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </p:panel>
+                    </p:outputPanel>
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>

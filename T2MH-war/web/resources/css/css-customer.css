@@ -1,0 +1,434 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 18, 2017, 7:37:52 PM
+    Author     : Huy-PC
+*/
+@charset "utf-8";
+.top-header
+{
+    background-color:#FFF;
+    border-bottom:1px solid #CCC;
+    position:absolute;
+    top:0;
+    left:0;
+    height:40px;
+    box-sizing:initial;
+    width:100%; 
+    margin:0 auto;
+}
+.top-header-function
+{
+    margin-top:1px;
+    text-align:left;
+    list-style:none outside none;
+    margin-left:auto;
+    margin-right:auto;
+    width:auto;
+
+}
+.top-header-element-1
+{
+    display:inline-block;
+    font-size:12px;
+
+}
+.top-header-element-text
+{
+    padding-right:5px;
+}
+.top-header-element-2
+{
+    display:inline-block;
+    font-size:12px;
+    padding:0 9px 0 11px;
+    background-position:-498px -35px;
+    border-left:1px solid #000;
+    border-right:1px solid #000;
+}
+.link-top
+{
+    text-decoration:none;
+    cursor:pointer;
+    color:#000;
+}
+.top-header-element-3
+{
+    display:inline-block;
+    font-size:12px;
+    padding:0 9px 0 11px;
+    background-position:-498px -35px;
+    border-right:1px solid #000;
+}
+.top-header-element-4
+{
+    display:inline-block;
+    font-size:12px;
+    padding:0 9px 0 11px;
+    background-position:-498px -35px;
+    border-right:1px solid #000;
+}
+.top-header-element-5
+{
+    display:inline-block;
+    font-size:12px;
+    padding:0 9px 0 11px;
+    background-position:-498px -35px;
+}
+.icon-cart
+{
+    width:20px;
+    height:20px;
+    display:block;
+    padding-top:6px;
+}
+/**********************************/
+body {
+    font-family:"Times New Roman", Times, serif;
+    background-color:rgba(248, 248, 250, 0);
+
+}
+#wrapper
+{
+    width:1360px;
+    margin:auto;
+}
+/*************Header******/
+#search
+{
+    width:200px;
+    padding:7px;
+    border:solid 1px #59b8cc;
+}
+#submit
+{
+    padding:7px;
+    background:#59b8cc;
+    border:solid 1px #59b8cc;
+    color:white;
+    margin-left:-5px;
+}
+#header
+{
+    width:auto;
+
+    margin-top:30px;
+}
+#header-top
+{
+    width:auto;
+    overflow:auto;
+    margin:10px 0;
+}
+#logo
+{
+    width:460px;
+    overflow:hidden;
+    float:left;
+    margin:10px;
+}
+#logo h1
+{
+    margin:0;
+    padding:0;
+    font-size:45px;
+    font-style:italic;
+    font-weight:100;
+}
+#cari
+{
+    width:480px;
+    overflow:auto;
+    float:right;
+    margin:40px 10px 10px 10px;;
+}
+#cari form{
+    float:right;
+}
+#header-center
+{
+    width:auto;
+
+    margin:10px 0;
+}
+.menu-wrapper
+{
+    width:100%;
+    background-color: #59b8cc;
+    border-radius:5px;
+}
+#menu {
+    margin: 0 auto; 
+    list-style: none; 
+    position: relative; 
+    width: 998px; 
+    height: 40px;
+    line-height: 29px;
+}
+
+#menu li {
+    float:left;
+    display:block;
+    text-align:center;
+    padding: 7px 10px 3px 10px;
+}
+
+#menu li:last-child {
+    border-right: none;
+}
+
+#menu li div li {
+    border-right: none;
+}
+
+#menu li a {
+    padding:10px;
+    display:inline;
+    text-decoration:none;
+    color:#fff;
+}
+
+#menu li:hover a {
+    color:#FF8282;	
+}
+
+#menu li:hover div li a {
+    border-bottom: none;
+}
+
+
+.dropdown_4columns{
+    margin:4px auto;
+    float:left;
+    position:absolute;
+    left:-999em; 
+    text-align:left;
+    padding:10px 5px 10px 5px;
+    border:1px solid #777777;
+    border-top:none;
+    background:#FFFFFF;
+    border-radius: 0px 0px 5px 5px;
+    
+
+}
+
+
+.dropdown_4columns {width: 980px;}
+
+
+#menu li:hover .dropdown_4columns
+{
+    left:0;
+    top:auto;
+    right: auto;
+    bottom: auto;
+}
+
+.col_1,
+.col_2,
+.col_3,
+.col_4,
+.col_5 {
+    display:inline;
+    float: left;
+    position: relative;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.col_1 {width:130px;}
+.col_2 {width:270px;}
+.col_3 {width:410px;}
+.col_4 {width:550px;}
+.col_5 {width:690px;}
+
+
+#menu li:hover .align_right {
+    left:auto;
+    right:-1px;
+    top:auto;
+}
+
+#menu li:hover div a {
+    font-size:12px;
+    color:#015b86;
+}
+
+#menu li:hover div a:hover {
+    color:#029feb;
+}
+
+#menu li ul {
+    list-style:none;
+    padding:0;
+    margin:0 0 12px 0;
+}
+#menu li ul li {
+    font-size:12px;
+    line-height:24px;
+    position:relative;
+    text-shadow: 1px 1px 1px #ffffff;
+    padding:0;
+    margin:0;
+    float:none;
+    text-align:left;
+    width:130px;
+}
+#menu li ul li:hover {
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+}
+#header-bottom
+{
+
+}
+/******************Content***************/
+/******************footer***************/
+#footer
+{
+    width:1360px;
+    padding:60px 0px;
+    background-color:#222;
+    margin: auto;
+    top: 0;
+    left:0px;
+    bottom:0px;
+    height:30px;
+}
+#footer nav
+{
+    float:left;
+}
+#footer nav ul
+{
+
+}
+#footer nav ul li
+{
+    display:inline-block;
+    margin-left:20px;
+    list-style:none;
+}
+#footer nav ul li a
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-weight:400;
+    font-size:14px;
+    color:#fff;
+}
+/************************List-product***********************/
+#content
+{
+    width:1360px;
+    margin:auto;
+    overflow: auto;
+}
+.product-group-1
+{
+    margin-right:30px;
+    width:580px;
+    border:0;
+    margin-bottom:75px;
+    margin-left:60px;
+    float:left;
+}
+.big-title-list
+{
+    margin:20px 10px;
+    font-size:24px;
+    font-weight:bold;
+    line-height:none;
+    display:block;
+    position:relative;
+    font-family:"Aleo Light","Palatino Linotype",Palatino;
+    color:#333;
+}
+.big-title-list > a
+{
+    color:#333;
+}
+.product
+{
+    border:1px solid #ddd;
+    position:relative;
+    overflow:hidden;
+}
+.thumb
+{
+    width:400px;
+    height:420px;
+    position:relative;
+    display:block;
+    overflow:hidden;
+    background:#FFF;
+}
+.img-left
+{
+    display: block;
+    width: 439px;
+    height: 400px;
+    top: 9px;
+    left: 8.5px;
+    position:absolute;
+}
+
+.list-product-small
+{
+    position:absolute;
+    right:0;
+    top:0;
+    border-left:1px solid #ddd;
+}
+.img-right
+{
+    display: block;
+    width: 140px;
+    height: 140px;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+
+.frist
+{
+    border-top:0;
+}
+.thumbs
+{
+    width:140px;
+    height:140px;
+    position:relative;
+    display:block;
+    overflow:hidden;
+    background:#FFF;
+}
+.second
+{
+    border-top:1px solid #ddd;
+}
+.third
+{
+    border-top:1px solid #ddd;
+}
+.product-group-2
+{
+    margin-right:30px;
+    width:580px;
+    border:0;
+    margin-bottom:75px;
+    margin-left:120px;
+    display:inline-block;
+    float:left;
+}
+#content-top
+{
+    padding-bottom:100px;
+    margin: auto;
+}
+
+
+

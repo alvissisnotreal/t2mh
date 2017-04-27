@@ -1,0 +1,66 @@
+<ui:composition template="../../Template/Admin/Template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:view>
+            <f:metadata>
+                <f:viewAction action="#{aboutBM.isAllowed('Role01')}" rendererType="preRenderView" />
+                <f:viewAction action="#{aboutBM.loadDetails()}" rendererType="preRenderView"/>
+            </f:metadata>
+            <h:body>
+                <p:growl id="messagesUpdate" showDetail="true" autoUpdate="true" />
+                <h:form>
+                    <p:outputPanel id="infoBM" rendered="#{not empty aboutBM.branchManager}">
+                        <p:panel header="Details/Update Branch Manager" >  
+                            <p:panelGrid layout="grid" columns="2" columnClasses="panelGridcolumn1,panelGridcolumn2">
+                                <p:outputLabel for="bmUsername" value="Username: " style="font-weight:bold" title="Branch Manager Username"  />                    
+                                <p:inputText id="bmUsername"  value="#{aboutBM.branchManager.bmUsername}"  required="true" label="BranchManager Username" 
+                                             requiredMessage="Username is required!" readonly="true" >
+                                </p:inputText>
+
+                                <p:outputLabel for="bmPassword" value="Password: " binding="#{thePassword}" style="font-weight:bold" title="Password"/>                    
+                                <p:password id="bmPassword" valueChangeListener="#{aboutBM.passwordChangeListener}" feedback="true" 
+                                            label="Password" requiredMessage="Password is required!">
+                                    <f:validateLength  minimum="5" maximum="200" for="bmPassword" disabled="#{empty sessionScope['cre_bm_password']}"/>
+                                    <p:ajax event="blur" update="messagesUpdate" listener="#{aboutBM.checkConfirmPassword()}" 
+                                            disabled="#{empty sessionScope['cre_bm_confirmPassword']}"/>
+                                    <p:ajax/>
+                                </p:password>
+
+                                <p:outputLabel for="confirmPassword" value="Confirm Password: " style="font-weight:bold" title="Confirm Password"/>                    
+                                <p:password id="confirmPassword"  binding="#{theConfirm}" valueChangeListener="#{aboutBM.confirmPasswordChangeListener}" label="Confirm Password" >
+                                    <f:validateLength  minimum="5" maximum="200" for="confirmPassword" disabled="#{empty sessionScope['cre_bm_confirmPassword']}"/>
+                                    <p:ajax event="blur" listener="#{aboutBM.checkConfirmPassword()}"  update="messagesUpdate" disabled="#{empty sessionScope['cre_bm_password']}"/>
+                                    <p:ajax/>
+                                </p:password>
+
+
+                                <p:outputLabel for="branchID" value="Branch ID" style="font-weight:bold" title="Branch ID"/>                    
+                                <p:inputText id="branchID"  value="#{aboutBM.branchManager.branchID.branchID}"  required="true" label="Branch ID" requiredMessage="Branch ID is required!" readonly="true">
+                                    <p:keyFilter regEx="/[0-9]/i"/>
+                                    <p:ajax event="blur" update="messagesUpdate" listener="#{aboutBM.checkBID()}"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="Status" value="Status: " style="font-weight:bold" title="Enable"/>
+                                <p:selectOneButton id="Status" value="#{aboutBM.branchManager.BMStatus}" required="true" requiredMessage="Status is required!">
+                                    <f:selectItem itemLabel="Enable" itemValue="1"   />
+                                    <f:selectItem itemLabel="Disable" itemValue="0" />
+                                </p:selectOneButton>
+                                <br/>
+
+                            </p:panelGrid>
+
+                            <p:commandButton ajax="true"  action="#{aboutBM.updateBM()}" value="Update" class="ui-state-active"/>
+                        </p:panel>
+                    </p:outputPanel>
+
+                </h:form>
+            </h:body>
+        </f:view>
+    </ui:define>
+</ui:composition>
+
+
